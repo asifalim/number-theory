@@ -1,33 +1,51 @@
 #include<bits/stdc++.h>
 using namespace std;
+#define fast ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
+#define dbg(a,b,c,d) cerr<<a<<"  "<<b<<"  "<<c<<"  "<<d<<endl;
+#define kill(a) {cout<<a<<endl;continue;}
+#define KILL(a) {cout<<a<<endl;return 0;}
+#define debug cerr<<"Error Found"<<endl;
+#define mem(a,b) memset(a,b,sizeof(a))
+#define lcm(a, b) (a/__gcd(a,b))*b
+#define w(t) cin>>t;while(t--)
+#define pi  2 * acos(0.0)
 #define ll long long int
-int num[14],rem[14];
-void extended_euqlid(ll a,ll b,ll &x,ll &y)
+#define endl "\n"
+#define INF (1LL<<61)
+int t,cs=0;
+const int mxn=1e6+2,mod=1e9+7;
+int inverse(int64_t a,int64_t b)
 {
-    if(!b)x=1,y=0;
-    else extended_euqlid(b,a%b,y,x),y-=(a/b)*x;
-}
-ll chinese_remainder(ll n)
-{
-    ll mul=1,res=0,x,y;
-    for(int i=0;i<n;i++)mul*=num[i];
-    for(int i=0;i<n;i++)
+    int64_t x=1,y=0,md=b,prev;
+    while(b)
     {
-        ll pp=mul/num[i];
-        extended_euqlid(pp,num[i],x,y);
-        res=(res+rem[i]*x*pp)%mul;
+        prev=y;
+        y=x-(a/b)*y,x=prev;
+        a=a%b;
+        swap(a,b);
     }
-    return (res+mul)%mul;
+    if(x<0)x+=md;
+    return x;
 }
-int main()
+int32_t main()
 {
-    int t,k=1;
-    cin>>t;
-    while(t--)
+
+    //fast;
+    w(t)
     {
-        int n,i,j;
+        int n;
         cin>>n;
-        for(i=0;i<n;i++)cin>>num[i]>>rem[i];
-        cout<<"Case "<<k++<<": "<<chinese_remainder(n)<<endl;
+        array<int,2>ar[n];
+        int64_t MUL=1;
+        for(int i=0; i<n; i++)cin>>ar[i][0]>>ar[i][1],MUL=1LL*MUL*ar[i][0];
+        int64_t ans=0;
+        for(int i=0; i<n; i++)
+        {
+            int rem=ar[i][1];
+            int64_t mul=MUL/ar[i][0];
+            int inv=inverse(mul,ar[i][0]);
+            ans+=1LL*rem*mul*inv,ans%=MUL;
+        }
+        cout<<"Case "<<++cs<<": "<<ans<<endl;
     }
 }
